@@ -13,21 +13,33 @@ string toLower(const string& str)
 	return boost::to_lower_copy(str);
 }
 
+int readIntegerFromFile(ifstream& inFile)
+{
+	string integer;
+	getline(inFile, integer);
+	return stoi(integer);
+}
+
+vector<string> readWordPairsFromFile(ifstream& inFile)
+{
+	string wordPairsStr;
+	vector<string> wordPairsVec;
+
+	getline(inFile, wordPairsStr);
+	boost::split(wordPairsVec, wordPairsStr, boost::is_any_of(" "));
+
+	return wordPairsVec;
+}
+
 unordered_map<string, string> parseDictionary(ifstream& inFile)
 {
-	string numWordPairsStr;
-	getline(inFile, numWordPairsStr);
-	int numWordPairs = stoi(numWordPairsStr);
+	int numWordPairs = readIntegerFromFile(inFile);
 
 	unordered_map<string, string> dictMap;
 
 	for (int i{0}; i < numWordPairs; ++i)
 	{
-		string wordPairsStr;
-		vector<string> wordPairsVec;
-
-		getline(inFile, wordPairsStr);
-		boost::split(wordPairsVec, wordPairsStr, boost::is_any_of(" "));
+		auto wordPairsVec = readWordPairsFromFile(inFile);
 		dictMap[toLower(wordPairsVec[0])] = toLower(wordPairsVec[1]);
 	}
 
@@ -62,21 +74,15 @@ bool areWordsSynonyms(const std::unordered_map<string, string>& dictMap, string 
 	}
 }
 
-void processTestPairs(ifstream& inFile, vector<string>& out)
+void processTestPairs(ifstream& inFile, vector<string>& output)
 {
 	auto dictMap = parseDictionary(inFile);
 
-	string numTestPairsStr;
-	getline(inFile, numTestPairsStr);
-	int numTestPairs = stoi(numTestPairsStr);
+	int numTestPairs = readIntegerFromFile(inFile);
 
 	for (int i{0}; i < numTestPairs; ++i)
 	{
-		string testPairsStr;
-		std::vector<string> testPairsVec;
-
-		getline(inFile, testPairsStr);
-		boost::split(testPairsVec, testPairsStr, boost::is_any_of(" "));
+		auto testPairsVec = readWordPairsFromFile(inFile);
 
 		bool areSynonyms;
 
@@ -90,7 +96,7 @@ void processTestPairs(ifstream& inFile, vector<string>& out)
 		}
 
 		string line = areSynonyms ? "synonyms" : "different";
-		out.push_back(line);
+		output.push_back(line);
 	}
 
 
@@ -107,10 +113,7 @@ int main()
 
 	if (inFile.is_open())
 	{
-		string numTestCasesStr;
-
-		getline(inFile, numTestCasesStr);
-		int numTestCases = stoi(numTestCasesStr);
+		int numTestCases = readIntegerFromFile(inFile);
 
 		for (int i{0}; i < numTestCases; ++i)
 		{
