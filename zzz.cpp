@@ -15,9 +15,9 @@ string toLower(const string& str)
 
 int readIntegerFromFile(ifstream& inFile)
 {
-	string integer;
-	getline(inFile, integer);
-	return stoi(integer);
+	string integerStr;
+	getline(inFile, integerStr);
+	return stoi(integerStr);
 }
 
 vector<string> readWordPairsFromFile(ifstream& inFile)
