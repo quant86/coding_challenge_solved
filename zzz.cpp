@@ -34,7 +34,7 @@ unordered_map<string, string> parseDictionary(ifstream& inFile)
 	return dictMap;
 }
 
-bool areWordsSynonyms(unordered_map<string, string>& reverseDictMap, const std::unordered_map<string, string>& dictMap, string word1, string word2)
+bool areWordsSynonyms(const std::unordered_map<string, string>& dictMap, string word1, string word2)
 {
 	if (word1 == word2)
 	{
@@ -83,12 +83,10 @@ void processTestPairs(ifstream& inFile, vector<string>& out)
 		string word1 = toLower(testPairsVec[0]);
 		string word2 = toLower(testPairsVec[1]);
 
-		unordered_map<string, string> reverseDictMap;
-
-		areSynonyms = areWordsSynonyms(reverseDictMap, dictMap, word1, word2);
+		areSynonyms = areWordsSynonyms(dictMap, word1, word2);
 		if (!areSynonyms)
 		{
-			areSynonyms = areWordsSynonyms(reverseDictMap, dictMap, word2, word1);
+			areSynonyms = areWordsSynonyms(dictMap, word2, word1);
 		}
 
 		string line = areSynonyms ? "synonyms" : "different";
