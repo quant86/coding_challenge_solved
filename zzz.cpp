@@ -6,24 +6,22 @@
 
 #include <boost/algorithm/string.hpp>
 
-using namespace std;
-
-string toLower(const string& str)
+std::string toLower(const std::string& str)
 {
 	return boost::to_lower_copy(str);
 }
 
-int readIntegerFromFile(ifstream& inFile)
+int readIntegerFromFile(std::ifstream& inFile)
 {
-	string integerStr;
-	getline(inFile, integerStr);
+	std::string integerStr;
+	std::getline(inFile, integerStr);
 	return stoi(integerStr);
 }
 
-vector<string> readWordPairsFromFile(ifstream& inFile)
+std::vector<std::string> readWordPairsFromFile(std::ifstream& inFile)
 {
-	string wordPairsStr;
-	vector<string> wordPairsVec;
+	std::string wordPairsStr;
+	std::vector<std::string> wordPairsVec;
 
 	getline(inFile, wordPairsStr);
 	boost::split(wordPairsVec, wordPairsStr, boost::is_any_of(" "));
@@ -31,11 +29,11 @@ vector<string> readWordPairsFromFile(ifstream& inFile)
 	return wordPairsVec;
 }
 
-unordered_map<string, string> parseDictionary(ifstream& inFile)
+std::unordered_map<std::string, std::string> parseDictionary(std::ifstream& inFile)
 {
 	int numWordPairs = readIntegerFromFile(inFile);
 
-	unordered_map<string, string> dictMap;
+	std::unordered_map<std::string, std::string> dictMap;
 
 	for (int i{0}; i < numWordPairs; ++i)
 	{
@@ -46,19 +44,18 @@ unordered_map<string, string> parseDictionary(ifstream& inFile)
 	return dictMap;
 }
 
-bool areWordsSynonyms(const std::unordered_map<string, string>& dictMap, string word1, string word2)
+bool areWordsSynonyms(const std::unordered_map<std::string, std::string>& dictMap, const std::string& word1, const std::string& word2)
 {
 	if (word1 == word2)
 	{
 		return true;
 	}
 
-	string word = word1;
+	std::string word = word1;
 
 	while(true)
 	{
 		auto it = dictMap.find(word);
-
 		if (it != dictMap.end())
 		{
 			word = it->second;
@@ -74,7 +71,7 @@ bool areWordsSynonyms(const std::unordered_map<string, string>& dictMap, string 
 	}
 }
 
-void processTestPairs(ifstream& inFile, vector<string>& output)
+void processTestPairs(std::ifstream& inFile, std::vector<std::string>& output)
 {
 	auto dictMap = parseDictionary(inFile);
 
@@ -86,8 +83,8 @@ void processTestPairs(ifstream& inFile, vector<string>& output)
 
 		bool areSynonyms;
 
-		string word1 = toLower(testPairsVec[0]);
-		string word2 = toLower(testPairsVec[1]);
+		std::string word1 = toLower(testPairsVec[0]);
+		std::string word2 = toLower(testPairsVec[1]);
 
 		areSynonyms = areWordsSynonyms(dictMap, word1, word2);
 		if (!areSynonyms)
@@ -95,21 +92,20 @@ void processTestPairs(ifstream& inFile, vector<string>& output)
 			areSynonyms = areWordsSynonyms(dictMap, word2, word1);
 		}
 
-		string line = areSynonyms ? "synonyms" : "different";
+		std::string line = areSynonyms ? "synonyms" : "different";
 		output.push_back(line);
 	}
 
 
 }
 
-int main()
+std::vector<std::string> readAndprocessFile()
 {
-	// read and process input file
-	string inFileName = "input.txt";
-	ifstream inFile;
+	std::string inFileName = "input.txt";
+	std::ifstream inFile;
 	inFile.open(inFileName);
 
-	vector<string> output;
+	std::vector<std::string> output;
 
 	if (inFile.is_open())
 	{
@@ -124,27 +120,38 @@ int main()
 	}
 	else
 	{
-		cout << "Cannot open file: " << inFileName << endl;
+		std::cout << "Cannot open file: " << inFileName << "\n";
 	}
 
-	// write and save output file
-	string outFileName = "output.txt";
-	ofstream outFile;
+	return output;
+}
+
+void createOutputFile(const std::vector<std::string>& output)
+{
+	std::string outFileName = "output.txt";
+	std::ofstream outFile;
 	outFile.open(outFileName);
 
 	if (outFile.is_open())
 	{
 		for (auto out : output)
 		{
-			outFile << out << endl;
+			outFile << out << "\n";
 		}
 
 		outFile.close();
 	}
 	else
 	{
-		cout << "Could not create file: " << outFileName << endl;
+		std::cout << "Could not create file: " << outFileName << "\n";
 	}
+}
+
+int main()
+{
+
+	auto output = readAndprocessFile();
+	createOutputFile(output);
 
 	return 0;
 }
