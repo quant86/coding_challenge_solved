@@ -97,7 +97,7 @@ void processTestPairs(std::ifstream& inFile, std::vector<std::string>& output)
 	}
 }
 
-std::vector<std::string> readAndprocessFile()
+std::vector<std::string> readAndProcessFile()
 {
 	std::string inFileName = "input.txt";
 	std::ifstream inFile;
@@ -147,7 +147,7 @@ void createOutputFile(const std::vector<std::string>& output)
 
 int main()
 {
-	auto output = readAndprocessFile();
+	auto output = readAndProcessFile();
 	createOutputFile(output);
 
 	return 0;
